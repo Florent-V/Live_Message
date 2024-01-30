@@ -1,0 +1,33 @@
+body {
+  background-color: skyblue;
+  color: #0a53be;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+@mixin formStyle {
+  max-width: 900px;
+}
+
+.globalForm {
+  @include formStyle;
+  margin-top: 2rem;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  form {
+    color: black;
+  }
+
+  button {
+    display: block;
+    margin: auto;
+  }
+}
