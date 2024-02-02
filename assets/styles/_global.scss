@@ -1,6 +1,12 @@
 body {
   background-color: skyblue;
   color: #0a53be;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  main {
+    flex-grow: 1!important;
+  }
 }
 
 h1 {
