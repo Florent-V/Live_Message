@@ -7,6 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as CustomAssert;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -18,10 +21,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Email(
+        message: '{{ value }} n\'est pas un email valide.',
+    )]
+    #[CustomAssert\GrantedMail]
     private ?string $email = null;
 
     #[ORM\Column]
     private array $roles = [];
+
+    #[Assert\Length(
+        min: 3,
+        max: 100,
+        minMessage: 'Your password must be at least {{ limit }} characters long',
+        maxMessage: 'Your password must not exceed {{ limit }} characters',
+    )]
+//    #[Assert\PasswordStrength(
+//        minScore:PasswordStrength::STRENGTH_WEAK, // Very strong password required
+//        message: 'Your password is too easy to guess. Company\'s security policy requires to use a stronger password.'
+//    )]
+    protected ?string $plainPassword=null;
 
     /**
      * @var string The hashed password
@@ -30,7 +50,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private bool $isVerified = false;
+
+    #[ORM\Column(length: 80)]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 3,
+        max: 80,
+        minMessage: 'Your first name must be at least {{ limit }} characters long',
+        maxMessage: 'Your first name must not exceed {{ limit }} characters',
+    )]
+    private ?string $username = null;
 
     public function getId(): ?int
     {
@@ -112,5 +142,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): static
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): void
+    {
+        $this->plainPassword = $plainPassword;
     }
 }
