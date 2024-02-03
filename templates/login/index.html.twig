@@ -1,20 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello LoginController!{% endblock %}
+{% block title %}Login Page{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <main class="container-md globalForm loginForm">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/florent-vasseur/Documents/Dev_Project/live_message/src/Controller/LoginController.php'|file_link(0) }}">src/Controller/LoginController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/florent-vasseur/Documents/Dev_Project/live_message/templates/login/index.html.twig'|file_link(0) }}">templates/login/index.html.twig</a></code></li>
-    </ul>
-</div>
+        <h1 class="text-center">Login</h1>
+
+        {% if error %}
+            <div class="alert alert-warning" role="alert" aria-live="assertive">
+                {% if error.code == 2000 %}
+                    &#9785;&#65039;  {{ error.messageKey|trans(error.messageData, 'security')|raw }}
+                {% elseif error.message == "The presented password is invalid." or error.message == "Bad credentials."%}
+                    &#9785;&#65039; Les identifiants sont incorrects. Veuillez les vérifier et réessayer.
+                {% else %}
+                    {{ error.messageKey|trans(error.messageData, 'security')|raw }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <form action="{{ path('app_login') }}" method="post">
+
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}">
+                <label for="username">Email:</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" name="_password">
+                <label for="password">Password:</label>
+            </div>
+
+            {# If you want to control the URL the user is redirected to on success #}
+            <input type="hidden" name="_target_path" value="/">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <button class="btn btn-primary" type="submit">Se connecter</button>
+        </form>
+
+        <div class="newUser">
+            <p>Pas encore enregistré ? Créer un compte <a href="{{ path('app_register') }}">ici</a></p>
+            <p><a href="{{ path('app_forgot_password_request') }}">Mot de passe oublié ?</a></p>
+        </div>
+
+    </main>
+
 {% endblock %}

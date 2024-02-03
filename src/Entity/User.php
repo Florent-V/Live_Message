@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as CustomAssert;
 use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -24,6 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Email(
         message: '{{ value }} n\'est pas un email valide.',
     )]
+    #[CustomAssert\GrantedMail]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -35,10 +37,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         minMessage: 'Your password must be at least {{ limit }} characters long',
         maxMessage: 'Your password must not exceed {{ limit }} characters',
     )]
-    #[Assert\PasswordStrength(
-        minScore:PasswordStrength::STRENGTH_WEAK, // Very strong password required
-        message: 'Your password is too easy to guess. Company\'s security policy requires to use a stronger password.'
-    )]
+//    #[Assert\PasswordStrength(
+//        minScore:PasswordStrength::STRENGTH_WEAK, // Very strong password required
+//        message: 'Your password is too easy to guess. Company\'s security policy requires to use a stronger password.'
+//    )]
     protected ?string $plainPassword=null;
 
     /**
@@ -48,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private bool $isVerified = false;
 
     #[ORM\Column(length: 80)]
     #[Assert\NotBlank]
