@@ -22,6 +22,40 @@ class MessageController extends AbstractController
         ]);
     }
 
+    #[Route('/run', name: 'run', methods: ['GET'])]
+    public function run(MessageRepository $messageRepository): Response
+    {
+        return $this->render('message/run.html.twig');
+    }
+
+    #[Route('/get-all', name: 'get_all', methods: ['GET'])]
+    public function getAll(MessageRepository $messageRepository): Response
+    {
+        return $this->json([
+            'messages' => $messageRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/get-unread', name: 'get_unread', methods: ['GET'])]
+    public function getUnread(MessageRepository $messageRepository): Response
+    {
+        return $this->json([
+            'messages' => $messageRepository->findBy(
+                ['isRead' => false]
+            ),
+        ]);
+    }
+
+    #[Route('/get-read', name: 'get_read', methods: ['GET'])]
+    public function getRead(MessageRepository $messageRepository): Response
+    {
+        return $this->json([
+            'messages' => $messageRepository->findBy(
+                ['isRead' => true]
+            ),
+        ]);
+    }
+
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
