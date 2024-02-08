@@ -16,24 +16,83 @@ export default class extends Controller {
         let flag = false;
         let messagesBus = [];
         let allMessages;
+        let maxId = 0;
 
         const startStopButton = document.getElementById('start-stop-btn');
-        startStopButton.addEventListener('click', () => {
+        const testButton = document.getElementById('test-btn');
+        const messageArea = document.getElementById('message-area');
+
+        startStopButton.addEventListener('click', async () => {
+            console.log(flag);
             if(flag === false) {
                 startStopButton.textContent = 'Stop';
                 flag = true;
-                //runDisplay();
-                runApiCall();
+                await start();
             } else {
                 startStopButton.textContent = 'Start';
                 flag = false;
                 document.getElementById('message-area').innerHTML = '';
             }
-            console.log(flag);
         });
 
-        async function getMessages(route) {
-            const apiUrl = '/message/get-'+route;
+        testButton.addEventListener('click', () => {
+            console.log('test');
+            messagesBus.splice(4,1)
+            console.log('élément retiré');
+
+        });
+
+        async function start() {
+            allMessages = await getMessages(maxId, 'read');
+            console.log('initialisation read messages', allMessages.length);
+            await Promise.all([runDisplayLoop(), runApiCallLoop()]);
+        }
+
+        async function runDisplayLoop() {
+            let indexMessage = 0;
+            while(flag) {
+                if (messagesBus.length > 0) {
+                    console.log('messagesBus à traiter', messagesBus.length);
+                    const messageToDisplay = messagesBus.shift();
+                    displayOneMessage(messageToDisplay);
+                    allMessages.push(messageToDisplay);
+                } else {
+                    displayOneMessage(allMessages[indexMessage]);
+                    indexMessage++;
+                    if(indexMessage === allMessages.length) {
+                        indexMessage = 0;
+                    }
+                }
+
+                await sleep(1000);
+            }
+        }
+
+        async function runApiCallLoop() {
+
+            console.log('initialisation messageBus', messagesBus.length);
+            console.log('initialisation maxId', maxId);
+
+            while(flag) {
+                const newMessages = await getMessages(maxId, 'unread');
+                console.log('new unread messages', newMessages.length);
+                maxId = newMessages.length ? newMessages.reduce((maxId, message) => Math.max(maxId, message.id), -1) : maxId;
+                console.log('new maxId', maxId);
+                mergeMessages(messagesBus, newMessages);
+                console.log('merge done messageBus', messagesBus.length);
+                await sleep(1000);
+            }
+        }
+        function displayOneMessage(message) {
+            // Créez un élément de paragraphe
+            const p = document.createElement('p');
+            p.textContent = message.content;
+            // Ajoutez le paragrahe à la page
+            messageArea.appendChild(p);
+        }
+
+        async function getMessages(index, status) {
+            const apiUrl = `/message/get/${index}/${status}`;
             try {
                 const response = await axios.get(apiUrl);
                 console.log(response.data.messages);
@@ -44,77 +103,16 @@ export default class extends Controller {
             }
         }
 
-        async function runDisplay() {
-            while(flag) {
-                await sleep(1000);
-                run();
-            }
-        }
-
-        async function runApiCall() {
-
-            allMessages = await getMessages('read');
-            console.log('initialisation', allMessages.length);
-            console.log('initialisation', messagesBus.length);
-
-            while(flag) {
-                const messages = await getMessages('unread');
-                messagesBus = mergeMessages(messagesBus, messages);
-                console.log('merge done', messagesBus.length);
-                console.log('api call done', messagesBus.length);
-                await sleep(1000);
-            }
-        }
-
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
         function mergeMessages(messagesBus, messages) {
-            // Fusionner les tableaux sans doublons
-            return messagesBus.concat(
-                messages.filter(newMsg => !messagesBus.some(existingMsg => existingMsg.id === newMsg.id))
-            );
+            // Filtrer les messages qui ne sont pas encore dans messageBus
+            let nouveauxMessages = messages.filter(message => !messagesBus.some(busMessage => busMessage.id === message.id));
+            // Ajouter les nouveaux messages à messageBus
+            messagesBus.push(...nouveauxMessages);
         }
-
-
-
-        // async function getUnreadMessages()  {
-        //     const apiUrl = '/message/get-unread';
-        //     try {
-        //         const response = await axios.get(apiUrl);
-        //         console.log(response.data.messages);
-        //         return response.data.messages;
-        //     } catch (error) {
-        //         console.error('Erreur de l\'appel API :', error);
-        //         throw error;
-        //     }
-        // }
-
-        // async function getReadMessages()  {
-        //     const apiUrl = '/message/get-read';
-        //     try {
-        //         const response = await axios.get(apiUrl);
-        //         console.log(response.data.messages);
-        //         return response.data.messages;
-        //     } catch (error) {
-        //         console.error('Erreur de l\'appel API :', error);
-        //         throw error;
-        //     }
-        // }
-
-        // async function getReadMessages()  {
-        //     const apiUrl = '/message/get-all';
-        //     try {
-        //         const response = await axios.get(apiUrl);
-        //         console.log(response.data.messages);
-        //         return response.data.messages;
-        //     } catch (error) {
-        //         console.error('Erreur de l\'appel API :', error);
-        //         throw error;
-        //     }
-        // }
-
 
         this.element.textContent = 'Hello Stimulus! Edit me in assets/controllers/hello_controller.js';
 
@@ -135,15 +133,5 @@ export default class extends Controller {
             // Ajoutez la liste à la page
             messageArea.appendChild(ul);
         }
-
-        function displayOneMessage(message) {
-            // Créez un élément de paragraphe
-            const p = document.createElement('p');
-            p.textContent = message;
-            // Ajoutez le paragrahe à la page
-            document.body.appendChild(p);
-        }
-
-
     }
 }

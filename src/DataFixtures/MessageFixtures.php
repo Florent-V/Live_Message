@@ -14,11 +14,11 @@ class MessageFixtures extends Fixture
         $faker = Factory::create('fr_FR');
         $date = new \DateTimeImmutable('2024-02-01 00:00:00');
 
-        for ($i = 2; $i <= 100; $i++) {
+        for ($i = 2; $i <= 10; $i++) {
             $newDate = $date->modify('+'. $i . 'minutes');
             $message = new Message();
             $message->setAuthor($faker->firstName());
-            $message->setContent($faker->paragraph());
+            $message->setContent('Message ' . $i-1 . " " . $faker->paragraph());
             $message->setIsRead($faker->boolean());
             $message->setCreatedAt($newDate);
             $manager->persist($message);

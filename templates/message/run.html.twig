@@ -1,15 +1,65 @@
-{% extends 'base.html.twig' %}
+{% extends 'baseNoNavBar.html.twig' %}
 
 
 {% block title %}Livre d'Or{% endblock %}
 
 {% block body %}
-    <main id="board" class="">
+    <main id="board" class="messageBoard">
 
         <div {{ stimulus_controller('run-message') }}></div>
 
         <button class="btn btn-primary" id="start-stop-btn">Start</button>
+        <button class="btn btn-primary" id="test-btn">Test</button>
         <div id="message-area">
+            <div class="post-it">
+                <h2>Nouveau message</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper, nibh eu hendrerit ultricies, eros lectus tincidunt dui, eget pulvinar neque leo eget lectus.</p>
+            </div>
+
+            <div class="post-it">
+                <h2>Tâche importante</h2>
+                <p>N'oubliez pas de faire les courses aujourd'hui !</p>
+            </div>
+
+            <div class="post-it">
+                <h2>Titre du message</h2>
+                <p>Contenu du message</p>
+            </div>
+
+            <div class="post-it">
+                <h2>Titre du message</h2>
+                <p>Contenu du message</p>
+            </div>
+
+            <div class="post-it">
+                <h2>Titre du message</h2>
+                <p>Contenu du message</p>
+            </div>
+
+            <div class="post-it">
+                <h2>Titre du message</h2>
+                <p>Contenu du message</p>
+            </div>
+
+            <div class="post-it">
+                <h2>Titre du message</h2>
+                <p>Contenu du message</p>
+            </div>
+
+            <div class="post-it">
+                <h2>Titre du message</h2>
+                <p>Contenu du message</p>
+            </div>
+
+            <div class="post-it">
+                <h2>Titre du message</h2>
+                <p>Contenu du message</p>
+            </div>
+
+            <div class="post-it">
+                <h2>Titre du message</h2>
+                <p>Contenu du message</p>
+            </div>
 
         </div>
     </main>

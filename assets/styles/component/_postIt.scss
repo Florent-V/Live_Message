@@ -1,0 +1,24 @@
+#message-area {
+  display: flex;
+  flex-wrap: wrap;
+  .post-it {
+    width: 300px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+  }
+
+  .post-it h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .post-it p {
+    margin-bottom: 0;
+  }
+}

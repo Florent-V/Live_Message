@@ -21,6 +21,24 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
+    public function findMessageAfterId(int $id, ?string $isRead = null)
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->where('m.id > :id')
+            ->setParameter('id', $id);
+
+        if ($isRead !== null) {
+            $status = $isRead === 'read';
+            $qb->andWhere('m.isRead = :isRead')
+                ->setParameter('isRead', $status);
+        }
+        // Ajoutez l'ordre par sur created_at
+        $qb->orderBy('m.createdAt', 'ASC');
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Message[] Returns an array of Message objects
 //     */

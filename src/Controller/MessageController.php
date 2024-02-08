@@ -23,37 +23,27 @@ class MessageController extends AbstractController
     }
 
     #[Route('/run', name: 'run', methods: ['GET'])]
-    public function run(MessageRepository $messageRepository): Response
+    public function run(): Response
     {
         return $this->render('message/run.html.twig');
     }
 
-    #[Route('/get-all', name: 'get_all', methods: ['GET'])]
-    public function getAll(MessageRepository $messageRepository): Response
+    #[Route('/get/{index}/{read}',
+        name: 'get',
+        requirements: ['index' => '\d+', 'read' => 'read|unread'],
+        methods: ['GET'])]
+    public function test(
+        MessageRepository $messageRepository,
+        int $index = 0,
+        string $read = null
+    ): Response
     {
-        return $this->json([
-            'messages' => $messageRepository->findAll(),
-        ]);
-    }
+        $messages = $messageRepository->findMessageAfterId($index, $read);
 
-    #[Route('/get-unread', name: 'get_unread', methods: ['GET'])]
-    public function getUnread(MessageRepository $messageRepository): Response
-    {
         return $this->json([
-            'messages' => $messageRepository->findBy(
-                ['isRead' => false]
-            ),
+            'messages' => $messageRepository->findMessageAfterId($index, $read),
         ]);
-    }
 
-    #[Route('/get-read', name: 'get_read', methods: ['GET'])]
-    public function getRead(MessageRepository $messageRepository): Response
-    {
-        return $this->json([
-            'messages' => $messageRepository->findBy(
-                ['isRead' => true]
-            ),
-        ]);
     }
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
