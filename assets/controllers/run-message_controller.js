@@ -114,7 +114,7 @@ export default class extends Controller {
             messagesBus.push(...nouveauxMessages);
         }
 
-        this.element.textContent = 'Hello Stimulus! Edit me in assets/controllers/hello_controller.js';
+        //this.element.textContent = 'Hello Stimulus! Edit me in assets/controllers/hello_controller.js';
 
         function displayMessages(messages) {
             // Créez un élément de liste

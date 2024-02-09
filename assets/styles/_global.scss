@@ -1,3 +1,14 @@
+@font-face {
+  font-family: 'chalkiezregular';
+    src: url('../fonts/chalkiez/chalkiez-regular-webfont.woff2') format('woff2'),
+         url('../fonts/chalkiez/chalkiez-regular-webfont.woff') format('woff'),
+         url('../fonts/chalkiez/chalkiez-regular-webfont.ttf') format('ttf'),
+         url('../fonts/chalkiez/chalkiez-regular-webfont.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 * {
   box-sizing: border-box;
 }
@@ -14,10 +25,11 @@ body {
 }
 
 h1 {
+  font-family: chalkiezregular, sans-serif;
   font-size: 3rem;
   font-weight: 700;
   text-align: center;
-  margin-bottom: 1rem;
+  margin: 1rem 0;
 }
 
 @mixin formStyle {
