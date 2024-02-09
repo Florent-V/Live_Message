@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MessageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
@@ -17,6 +18,7 @@ class Message
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(min: 5, max: 400)]
     private ?string $content = null;
 
     #[ORM\Column]
