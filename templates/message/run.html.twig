@@ -4,72 +4,15 @@
 {% block title %}Livre d'Or{% endblock %}
 
 {% block body %}
-    <main {{ stimulus_controller('run-message') }} id="board" class="messageBoard d-flex flex-column">
-
-        <div class="flex-fill" id="message-area">
+    <main {{ stimulus_controller('run-message') }} class="runMessage">
 
             <div id="blackboard">
-                <h1>Bla bla bla</h1>
-                <div class="post-it scale-up-center">
-                    <h2>Titre du message</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus faucibus tellus elit, in aliquam augue consequat vitae. Vestibulum dapibus, eros eu finibus ultricies, dui neque interdum velit, vitae vulputate nulla nulla quis nulla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Mauris feugiat vestibulum nulla, et porttitor purus tincidunt vitae integer.
-                    </p>
-                </div>
 
-{#                <div class="post-it">#}
-{#                    <h2>Titre du message</h2>#}
-{#                    <p>Contenu du message</p>#}
-{#                </div>#}
+                <h1 class="titleBoard">Bla bla bla</h1>
 
-{#                <div class="post-it">#}
-{#                    <h2>Titre du message</h2>#}
-{#                    <p>Contenu du message</p>#}
-{#                </div>#}
-
-{#                <div class="post-it">#}
-{#                    <h2>Titre du message</h2>#}
-{#                    <p>Contenu du message</p>#}
-{#                </div>#}
-
-{#                <div class="post-it">#}
-{#                    <h2>Titre du message</h2>#}
-{#                    <p>Contenu du message</p>#}
-{#                </div>#}
-
-{#                <div class="post-it">#}
-{#                    <h2>Titre du message</h2>#}
-{#                    <p>Contenu du message</p>#}
-{#                </div>#}
-
-{#                <div class="post-it">#}
-{#                    <h2>Titre du message</h2>#}
-{#                    <p>Contenu du message</p>#}
-{#                </div>#}
-
-{#                <div class="post-it">#}
-{#                    <h2>Titre du message</h2>#}
-{#                    <p>Contenu du message</p>#}
-{#                </div>#}
-
-{#                <div class="post-it">#}
-{#                    <h2>Titre du message</h2>#}
-{#                    <p>Contenu du message</p>#}
-{#                </div>#}
-
-{#                <div class="post-it">#}
-{#                    <h2>Titre du message</h2>#}
-{#                    <p>Contenu du message</p>#}
-{#                </div>#}
 
             </div>
 
-
-        </div>
-
-        <div class="d-flex flex-row justify-content-center gap-2">
-            <button class="btn btn-primary" id="start-stop-btn">Start</button>
-            <button class="btn btn-primary" id="test-btn">Test</button>
-        </div>
     </main>
 
 {% endblock %}

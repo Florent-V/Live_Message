@@ -17,30 +17,76 @@ export default class extends Controller {
         let messagesBus = [];
         let allMessages;
         let maxId = 0;
+        let maxPostIt = 10;
+        let currentPostIt = 3;
 
         const startStopButton = document.getElementById('start-stop-btn');
-        const testButton = document.getElementById('test-btn');
-        const messageArea = document.getElementById('message-area');
+        const blackboard = document.getElementById('blackboard');
 
-        startStopButton.addEventListener('click', async () => {
-            console.log(flag);
-            if(flag === false) {
-                startStopButton.textContent = 'Stop';
-                flag = true;
-                await start();
-            } else {
-                startStopButton.textContent = 'Start';
-                flag = false;
-                document.getElementById('message-area').innerHTML = '';
+        document.addEventListener('click', (event) => {
+            // afficher les coordonnées de la souris
+            console.log(event.clientX, event.clientY);
+        });
+
+        document.addEventListener('keydown', async (event) => {
+            console.log(event.key);
+            if(event.key === 'r') {
+                console.log('coucou');
+                console.log(flag);
+                if(flag === false) {
+                    startStopButton.textContent = 'Stop';
+                    flag = true;
+                    await start();
+                } else {
+                    startStopButton.textContent = 'Start';
+                    flag = false;
+                    document.getElementById('message-area').innerHTML = '';
+                }
+            }
+            if (event.key === 't') {
+                console.log('test');
+                createPostIt();
             }
         });
 
-        testButton.addEventListener('click', () => {
-            console.log('test');
-            messagesBus.splice(4,1)
-            console.log('élément retiré');
+        function createPostIt() {
+            const postIt = document.createElement('div')
+            const h2 = document.createElement('h2');
+            h2.textContent = 'titre post it';
+            postIt.appendChild(h2);
+            const p = document.createElement('p');
+            p.textContent = 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor.' +
+                'Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,' +
+                'nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis,' +
+                'sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec,' +
+                'vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet A';
+            postIt.appendChild(p);
+            postIt.classList.add('post-it');
+            postIt.classList.add('pos' + currentPostIt);
+            blackboard.appendChild(postIt);
+            const rect = postIt.getBoundingClientRect();
+            let absCenter = rect.x + rect.width/2;
+            let ordCenter = rect.y + rect.height/2;
+            let moveX = window.innerWidth/2 - absCenter;
+            let moveY = window.innerHeight/2 - ordCenter;
+            // Animer le div pour qu'il apparaisse au centre puis se place dans la grille
+            postIt.animate([
+                {opacity: 0, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(0) `, offset: 0},
+                {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.2},
+                {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.8},
+                {opacity: 1, transform: "translate(0, 0) scale(1)"}
+            ], {
+                // Durée de l'animation : 3 secondes
+                duration: 3000,
+                // Mode de remplissage : conserver le style final
+                fill: "forwards"
+            });
+            currentPostIt++;
+            if (currentPostIt > maxPostIt) {
+                currentPostIt = 1;
+            }
+        }
 
-        });
 
         async function start() {
             allMessages = await getMessages(maxId, 'read');
