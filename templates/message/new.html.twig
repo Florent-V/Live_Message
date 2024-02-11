@@ -4,10 +4,15 @@
 
 {% block body %}
 
-    <main {{ stimulus_controller('count-character') }} class="container-md messageNew globalForm">
-        <h1>Create new Message</h1>
+    <main {{ stimulus_controller('count-character') }} class="container-md messageNew">
 
-        {{ include('message/_form.html.twig') }}
+        <div class="globalForm">
+            <h1>Envoie ton message</h1>
+
+            {{ include('message/_form.html.twig') }}
+
+        </div>
+
 
     </main>
 

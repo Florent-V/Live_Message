@@ -1,5 +1,81 @@
-#charCounter {
-  text-align: right;
-  margin-top: -1rem;
-  margin-bottom: 0.5rem;
+.messageNew {
+  min-width: 100vw;
+  background :
+          linear-gradient(115deg, rgba(58, 58, 158, 0.8), rgba(136, 136, 206, 0.7)
+          ) fixed no-repeat center,
+          url("../images/Ecole_saint_bertin.jpg") fixed no-repeat center;
+  background-size: cover;
+  font-size: 1.2em;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+
+  .globalForm {
+    color: #f0f0f0;
+    flex-grow: 1;
+
+    h1 {
+      font-weight: 800;
+      font-size : 1.8em;
+      margin : 10px;
+    }
+
+    form {
+      background-color: rgba(27, 27, 50, 0.8);
+      color: #f0f0f0;
+      padding: 35px;
+      margin: auto;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #37AF65;
+      display: block;
+      margin: auto;
+      width: 15rem;
+      max-width: 80%;
+      border: none;
+      padding: 10px;
+      color: white;
+      font-family: 'poppins', sans-serif;
+      font-size: 0.9em;
+      font-weight: 700;
+      border-radius: 5px;
+    }
+
+    textarea {
+      height: 10rem;
+    }
+
+    #message_author, #message_content {
+      padding: 8px;
+      width: 100%;
+      font-size: 0.9em;
+      border: 2px solid rgb(58, 58, 158);
+      border-radius: 5px;
+      margin-bottom: 25px;
+      vertical-align: baseline;
+    }
+
+    #message_author:focus, #message_content:focus {
+      border-color: #80bdff;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    i {
+      margin: 0 0.5rem;
+    }
+  }
+
+  #charCounter {
+    text-align: right;
+    margin-top: -1.5rem;
+    margin-bottom: 1rem;
+    margin-right: 0.2rem;
+    font-size: 0.8rem;
+  }
 }
+
+
+
