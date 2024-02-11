@@ -19,7 +19,7 @@ export default class extends Controller {
 
         messageArea.addEventListener('input', () => {
             const messageLength = messageArea.value.length;
-            charCounterArea.style.color = messageLength >= maxLen ? 'red' : 'black';
+            charCounterArea.style.color = messageLength >= maxLen ? 'red' : '#f0f0f0';
             if (messageLength >= maxLen) {
                 messageArea.value = messageArea.value.substring(0, maxLen);
                 charCounterArea.textContent = `Attention longueur maximale atteinte ${messageArea.value.length}/${maxLen}`;

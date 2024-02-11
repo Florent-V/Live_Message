@@ -1,7 +1,29 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-<div id="charCounter">
+        {{ form_row(form.author, {
+            label: 'Nom',
+            attr: {
+                placeholder: 'John Doe'
+            },
+            row_attr: {
+                class: 'mb-3'
+            }
+        }) }}
 
-</div>
-    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+    {{ form_row(form.content, {
+        label: 'Message',
+        attr: {
+            placeholder: 'Je te souhaite une joyeuse retraite...'
+        },
+        row_attr: {
+            class: 'mb-3'
+        }
+    }) }}
+    <div id="charCounter">
+
+    </div>
+    <button class="btn btn-primary">
+        <i class="fa-solid fa-paper-plane"></i>
+        {{ button_label|default('Envoyer') }}
+        <i class="fa-solid fa-paper-plane"></i>
+    </button>
 {{ form_end(form) }}
