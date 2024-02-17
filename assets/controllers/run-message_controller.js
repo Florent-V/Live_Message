@@ -125,13 +125,19 @@ export default class extends Controller {
             postIt.classList.add('post-it');
             postIt.classList.add('pos' + currentPostIt);
             postIt.style.backgroundColor = pastelColors[getRandomInt(0, pastelColors.length - 1)];
-
             blackboard.appendChild(postIt);
+
+            const nbEltByClass = document.getElementsByClassName('pos' + currentPostIt).length;
+
+            if (nbEltByClass > 5) {
+                //supprimer le premier élément de la classe
+                const firstElt = document.getElementsByClassName('pos' + currentPostIt)[0];
+                firstElt.remove();
+            }
+
             const rect = postIt.getBoundingClientRect();
             let absCenter = rect.x + rect.width/2;
             let ordCenter = rect.y + rect.height/2;
-            let moveX = window.innerWidth/2 - absCenter;
-            let moveY = window.innerHeight/2 - ordCenter;
             // Animer le div pour qu'il apparaisse au centre puis se place dans la grille
             if (animate) {
                 postIt.animate([
@@ -150,6 +156,7 @@ export default class extends Controller {
             if (currentPostIt > maxPostIt) {
                 currentPostIt = 1;
             }
+
         }
 
         async function getMessages(index, status) {
@@ -174,7 +181,8 @@ export default class extends Controller {
                 console.error('Erreur de l\'appel API :', error);
                 return [];
             }
-        }
+        }            let moveX = window.innerWidth/2 - absCenter;
+            let moveY = window.innerHeight/2 - ordCenter;
 
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
