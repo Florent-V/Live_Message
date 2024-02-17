@@ -153,7 +153,7 @@ export default class extends Controller {
         }
 
         async function getMessages(index, status) {
-            const apiUrl = `/message/get/${index}/${status}`;
+            const apiUrl = `/admin/message/get/${index}/${status}`;
             try {
                 const response = await axios.get(apiUrl);
                 console.log('messages', response.data.messages);
@@ -165,7 +165,7 @@ export default class extends Controller {
         }
 
         async function changeMessageStatus(id, status) {
-            const apiUrl = `/message/${id}/${status}`;
+            const apiUrl = `/admin/message/${id}/${status}`;
             try {
                 const response = await axios.get(apiUrl);
                 console.log('messages', response.data);
