@@ -21,6 +21,7 @@ body {
   main {
     flex-grow: 1;
   }
+  position: relative;
 }
 
 h1 {
@@ -47,4 +48,12 @@ h1 {
     display: block;
     margin: auto;
   }
+}
+
+.alert {
+  margin-bottom: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
 }

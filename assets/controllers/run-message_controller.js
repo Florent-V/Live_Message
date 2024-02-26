@@ -115,13 +115,20 @@ export default class extends Controller {
         }
 
         function createPostIt(message, animate = true, animationDuration = 1000) {
+            console.log('createPostIt', message);
             const postIt = document.createElement('div')
-            const h2 = document.createElement('h2');
-            h2.textContent = message.author;
-            postIt.appendChild(h2);
-            const p = document.createElement('p');
-            p.textContent = message.content;
-            postIt.appendChild(p);
+            const title = document.createElement('h2');
+            const content = document.createElement('p');
+            const image = document.createElement('img');
+
+            title.textContent = message.author;
+            content.textContent = message.content;
+            image.src = `/media/cache/my_thumb/uploads/images/post_it/${message.image}`;
+
+            postIt.appendChild(title);
+            postIt.appendChild(content);
+            postIt.appendChild(image);
+
             postIt.classList.add('post-it');
             postIt.classList.add('pos' + currentPostIt);
             postIt.style.backgroundColor = pastelColors[getRandomInt(0, pastelColors.length - 1)];
@@ -181,8 +188,7 @@ export default class extends Controller {
                 console.error('Erreur de l\'appel API :', error);
                 return [];
             }
-        }            let moveX = window.innerWidth/2 - absCenter;
-            let moveY = window.innerHeight/2 - ordCenter;
+        }
 
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));

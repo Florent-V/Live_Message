@@ -8,6 +8,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class MessageType extends AbstractType
 {
@@ -15,6 +17,13 @@ class MessageType extends AbstractType
     {
         $builder
             ->add('author', TextType::class)
+            ->add('imageFile', VichFileType::class, [
+                'required' => false,
+                'allow_delete' => true,
+                'download_uri' => true,
+                'download_label' => 'Télécharger',
+                'asset_helper' => true,
+            ])
             ->add('content', TextareaType::class)
         ;
     }
