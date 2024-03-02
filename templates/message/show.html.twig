@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1>Message</h1>
+    {{ dump(message) }}
 
     <table class="table">
         <tbody>
@@ -27,12 +28,16 @@
                 <th>IsRead</th>
                 <td>{{ message.isRead ? 'Yes' : 'No' }}</td>
             </tr>
+            <tr>
+                <th>Picture</th>
+                <td><img src="{{ vich_uploader_asset(message, 'imageFile')|imagine_filter('my_thumb') }}" alt="{{ message.author }}"></td>
+            </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_message_index') }}">back to list</a>
+    <a href="{{ path('admin_app_message_index') }}">back to list</a>
 
-    <a href="{{ path('app_message_edit', {'id': message.id}) }}">edit</a>
+    <a href="{{ path('admin_app_message_edit', {'id': message.id}) }}">edit</a>
 
     {{ include('message/_delete_form.html.twig') }}
 {% endblock %}

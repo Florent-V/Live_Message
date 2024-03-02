@@ -3,12 +3,17 @@
 namespace App\Entity;
 
 use App\Repository\MessageRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\UX\Turbo\Attribute\Broadcast;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
+#[Vich\Uploadable]
 #[Broadcast]
 class Message
 {
@@ -30,8 +35,47 @@ class Message
     #[ORM\Column]
     private ?bool $isRead = false;
 
-    #[ORM\Column(length: 80)]
+    #[ORM\Column(length: 30)]
     private ?string $author = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $image = null;
+
+    #[Vich\UploadableField(mapping: 'post_it_image', fileNameProperty: 'image')]
+    #[Assert\File(
+        maxSize: '1M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+    )]
+    private ?File $imageFile = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DatetimeInterface $updatedAt = null;
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile = null): static
+    {
+        $this->imageFile = $imageFile;
+        if ($imageFile) {
+            $this->updatedAt = new DateTime('now');
+        }
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -95,6 +139,17 @@ class Message
     {
         $this->author = $author;
 
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?DateTimeInterface $updatedAt): Message
+    {
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 }

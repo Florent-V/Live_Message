@@ -9,15 +9,25 @@
             }
         }) }}
 
-    {{ form_row(form.content, {
-        label: 'Message',
-        attr: {
-            placeholder: 'Je te souhaite une joyeuse retraite...'
-        },
-        row_attr: {
-            class: 'mb-3'
-        }
-    }) }}
+        {{ form_row(form.imageFile, {
+            label: 'Photo',
+            attr: {
+                placeholder: 'Je te souhaite une joyeuse retraite...'
+            },
+            row_attr: {
+                class: 'mb-3'
+            }
+        }) }}
+
+        {{ form_row(form.content, {
+            label: 'Message',
+            attr: {
+                placeholder: 'Je te souhaite une joyeuse retraite...'
+            },
+            row_attr: {
+                class: 'mb-3'
+            }
+        }) }}
     <div id="charCounter">
 
     </div>
