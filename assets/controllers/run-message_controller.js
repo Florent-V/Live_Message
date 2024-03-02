@@ -69,10 +69,9 @@ export default class extends Controller {
             }
 
             for (const message of allMessages) {
-                createPostIt(message, true, 100);
+                handleMessage(message, true, 100);
                 await sleep(100);
             }
-
             console.log('initialisation read messages', allMessages.length);
             await Promise.all([runDisplayLoop(), runApiCallLoop()]);
         }
@@ -84,12 +83,12 @@ export default class extends Controller {
                 if (messagesBus.length > 0) {
                     console.log('messagesBus à traiter', messagesBus.length);
                     const messageToDisplay = messagesBus.shift();
-                    createPostIt(messageToDisplay, true, 2000);
+                    handleMessage(messageToDisplay, true, 2000);
                     allMessages.push(messageToDisplay);
                     await changeMessageStatus(messageToDisplay.id, 'read');
                 } else {
                     console.log('aucun nouveau message à traiter', 'index', indexMessage, 'allMessages', allMessages.length);
-                    createPostIt(allMessages[indexMessage]);
+                    handleMessage(allMessages[indexMessage]);
                     indexMessage++;
                     if(indexMessage === allMessages.length) {
                         indexMessage = 0;
@@ -114,26 +113,7 @@ export default class extends Controller {
             }
         }
 
-        function createPostIt(message, animate = true, animationDuration = 1000) {
-            console.log('createPostIt', message);
-            const postIt = document.createElement('div')
-            const title = document.createElement('h2');
-            const content = document.createElement('p');
-            const image = document.createElement('img');
-
-            title.textContent = message.author;
-            content.textContent = message.content;
-            image.src = `/media/cache/my_thumb/uploads/images/post_it/${message.image}`;
-
-            postIt.appendChild(title);
-            postIt.appendChild(content);
-            postIt.appendChild(image);
-
-            postIt.classList.add('post-it');
-            postIt.classList.add('pos' + currentPostIt);
-            postIt.style.backgroundColor = pastelColors[getRandomInt(0, pastelColors.length - 1)];
-            blackboard.appendChild(postIt);
-
+        function incrementCurrentPostIt() {
             const nbEltByClass = document.getElementsByClassName('pos' + currentPostIt).length;
 
             if (nbEltByClass > 5) {
@@ -142,9 +122,112 @@ export default class extends Controller {
                 firstElt.remove();
             }
 
+            currentPostIt++;
+            if (currentPostIt > maxPostIt) {
+                currentPostIt = 1;
+            }
+        }
+
+        function createPostItText(message) {
+            if (!message.content) {
+                return null;
+            }
+            const postItText = document.createElement('div');
+            const title = document.createElement('h2');
+            const content = document.createElement('p');
+
+            title.textContent = message.author;
+            content.textContent = message.content;
+
+            postItText.appendChild(title);
+            postItText.appendChild(content);
+
+            return postItText;
+        }
+
+        function createPostItImage(message) {
+            if (!message.image) {
+                return null;
+            }
+            const postItImage = document.createElement('div');
+            const title = document.createElement('h2');
+            const image = document.createElement('img');
+
+            title.textContent = message.author;
+            image.src = `/media/cache/my_thumb/uploads/images/post_it/${message.image}`;
+
+            postItImage.appendChild(title);
+            postItImage.appendChild(image);
+
+            return postItImage;
+        }
+
+        function addStyleToPostIt(postIt) {
+            postIt.classList.add('post-it');
+            postIt.classList.add('pos' + currentPostIt);
+            postIt.style.backgroundColor = pastelColors[getRandomInt(0, pastelColors.length - 1)];
+            return postIt;
+        }
+
+        function handleMessage(message, animate = true, animationDuration = 1000) {
+            console.log('createPostIt', message);
+            // const postIt = document.createElement('div')
+            // const title = document.createElement('h2');
+            // const content = document.createElement('p');
+            // const image = document.createElement('img');
+            //
+            // title.textContent = message.author;
+            // content.textContent = message.content;
+            // image.src = `/media/cache/my_thumb/uploads/images/post_it/${message.image}`;
+            //
+            // postIt.appendChild(title);
+            // postIt.appendChild(content);
+            // postIt.appendChild(image);
+            //
+            // postIt.classList.add('post-it');
+            // postIt.classList.add('pos' + currentPostIt);
+            // postIt.style.backgroundColor = pastelColors[getRandomInt(0, pastelColors.length - 1)];
+            //
+            //
+            // const nbEltByClass = document.getElementsByClassName('pos' + currentPostIt).length;
+            //
+            // if (nbEltByClass > 5) {
+            //     //supprimer le premier élément de la classe
+            //     const firstElt = document.getElementsByClassName('pos' + currentPostIt)[0];
+            //     firstElt.remove();
+            // }
+
+            let postItText = createPostItText(message);
+            let postItImage = createPostItImage(message);
+
+            if (postItText && postItImage) {
+                postItText = addStyleToPostIt(postItText);
+                incrementCurrentPostIt();
+                postItImage = addStyleToPostIt(postItImage);
+                incrementCurrentPostIt();
+                displayDoublePostIt(postItText, postItImage, animate, animationDuration);
+                return;
+            }
+
+            let postIt = postItText || postItImage;
+            postIt = addStyleToPostIt(postIt);
+            incrementCurrentPostIt();
+            displayOnePostIt(postIt, animate, animationDuration);
+        }
+
+        function displayOnePostIt(postIt, animate, animationDuration) {
+            console.log('createdPostIt', postIt);
+            blackboard.appendChild(postIt);
+
             const rect = postIt.getBoundingClientRect();
+            if (rect.height < rect.width) {
+                postIt.style.height = rect.width + 'px';
+            }
+
+            console.log('rect', rect);
             let absCenter = rect.x + rect.width/2;
             let ordCenter = rect.y + rect.height/2;
+
             // Animer le div pour qu'il apparaisse au centre puis se place dans la grille
             if (animate) {
                 postIt.animate([
@@ -159,11 +242,56 @@ export default class extends Controller {
                     fill: "forwards"
                 });
             }
-            currentPostIt++;
-            if (currentPostIt > maxPostIt) {
-                currentPostIt = 1;
+        }
+
+        function displayDoublePostIt(postItText, postItImage, animate, animationDuration) {
+            console.log('createdPostIt', postItText);
+            console.log('createdPostIt', postItImage);
+            blackboard.appendChild(postItText);
+            blackboard.appendChild(postItImage);
+
+            const rectText = postItText.getBoundingClientRect();
+            if (rectText.height < rectText.width) {
+                postItText.style.height = rectText.width + 'px';
             }
 
+            const rectImage = postItImage.getBoundingClientRect();
+            if (rectImage.height < rectImage.width) {
+                postItImage.style.height = rectImage.width + 'px';
+            }
+
+            console.log('rect', rectText);
+            let absCenterText = rectText.x + rectText.width/2;
+            let ordCenterText = rectText.y + rectText.height/2;
+
+            let absCenterImage = rectImage.x + rectImage.width/2;
+            let ordCenterImage = rectImage.y + rectImage.height/2;
+
+            // Animer le div pour qu'il apparaisse au centre puis se place dans la grille
+            if (animate) {
+                postItText.animate([
+                    {opacity: 0, transform: `translate(${window.innerWidth/2 - absCenterText - rectText.width - 20}px, ${window.innerHeight/2 - ordCenterText}px) scale(0) `, offset: 0},
+                    {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenterText - rectText.width - 20}px, ${window.innerHeight/2 - ordCenterText}px) scale(2) `, offset: 0.2},
+                    {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenterText - rectText.width - 20}px, ${window.innerHeight/2 - ordCenterText}px) scale(2) `, offset: 0.8},
+                    {opacity: 1, transform: `translate(0, 0) scale(1) rotate(${getRandomInt(-10, 10)}deg`}
+                ], {
+                    // Durée de l'animation : 3 secondes
+                    duration: animationDuration,
+                    // Mode de remplissage : conserver le style final
+                    fill: "forwards"
+                });
+                postItImage.animate([
+                    {opacity: 0, transform: `translate(${window.innerWidth/2 - absCenterImage + rectImage.width + 20}px, ${window.innerHeight/2 - ordCenterImage}px) scale(0) `, offset: 0},
+                    {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenterImage + rectImage.width + 20}px, ${window.innerHeight/2 - ordCenterImage}px) scale(2) `, offset: 0.2},
+                    {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenterImage + rectImage.width + 20}px, ${window.innerHeight/2 - ordCenterImage}px) scale(2) `, offset: 0.8},
+                    {opacity: 1, transform: `translate(0, 0) scale(1) rotate(${getRandomInt(-10, 10)}deg`}
+                ], {
+                    // Durée de l'animation : 3 secondes
+                    duration: animationDuration,
+                    // Mode de remplissage : conserver le style final
+                    fill: "forwards"
+                });
+            }
         }
 
         async function getMessages(index, status) {

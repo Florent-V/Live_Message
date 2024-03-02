@@ -57,12 +57,14 @@ class MessageController extends AbstractController
             $entityManager->persist($message);
             $entityManager->flush();
 
-            try {
-                $realPath = $message->getImageFile()->getRealPath();
-                $relativePath = strstr($realPath, 'uploads');
-                $thumbPath = $this->filterService->getUrlOfFilteredImage($relativePath, 'my_thumb');
-            } catch (Exception $e) {
-                $this->addFlash('warning', 'Il y a eu une erreur avec la génération de la miniature');
+            if ($message->getImageFile()) {
+                try {
+                    $realPath = $message->getImageFile()->getRealPath();
+                    $relativePath = strstr($realPath, 'uploads');
+                    $thumbPath = $this->filterService->getUrlOfFilteredImage($relativePath, 'my_thumb');
+                } catch (Exception $e) {
+                    $this->addFlash('warning', 'Il y a eu une erreur avec la génération de la miniature');
+                }
             }
 
             $this->addFlash('success', 'Votre message a bien été envoyé !');
