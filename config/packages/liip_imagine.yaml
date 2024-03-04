@@ -2,6 +2,9 @@
 # app/config/config.yml
 
 liip_imagine:
+    driver: "gd" # or "gmagick" or "imagick"
+    twig:
+        mode: "lazy"
     resolvers:
         default:
             web_path: ~

@@ -8,13 +8,12 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/', name: 'home_')]
-#[IsGranted('ROLE_ADMIN')]
 class HomeController extends AbstractController
 {
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('home/index.html.twig');
+        return $this->redirectToRoute('app_message_new');
     }
 
 }

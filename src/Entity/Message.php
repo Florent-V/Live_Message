@@ -43,7 +43,7 @@ class Message
 
     #[Vich\UploadableField(mapping: 'post_it_image', fileNameProperty: 'image')]
     #[Assert\File(
-        maxSize: '1M',
+        maxSize: '10M',
         mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
     )]
     private ?File $imageFile = null;
