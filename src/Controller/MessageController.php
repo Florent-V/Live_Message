@@ -21,10 +21,6 @@ class MessageController extends AbstractController
         private readonly FilterService $filterService
     ) {
     }
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
     public function new(
         Request $request,
