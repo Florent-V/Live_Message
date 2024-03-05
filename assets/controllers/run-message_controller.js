@@ -69,7 +69,7 @@ export default class extends Controller {
             }
 
             for (const message of allMessages) {
-                handleMessage(message, true, 100);
+                await handleMessage(message, true, 100);
                 await sleep(100);
             }
             console.log('initialisation read messages', allMessages.length);
@@ -83,12 +83,12 @@ export default class extends Controller {
                 if (messagesBus.length > 0) {
                     console.log('messagesBus à traiter', messagesBus.length);
                     const messageToDisplay = messagesBus.shift();
-                    handleMessage(messageToDisplay, true, 2000);
+                    await handleMessage(messageToDisplay, true, 2000);
                     allMessages.push(messageToDisplay);
                     await changeMessageStatus(messageToDisplay.id, 'read');
                 } else {
                     console.log('aucun nouveau message à traiter', 'index', indexMessage, 'allMessages', allMessages.length);
-                    handleMessage(allMessages[indexMessage], true, 2000);
+                    await handleMessage(allMessages[indexMessage], true, 2000);
                     indexMessage++;
                     if(indexMessage === allMessages.length) {
                         indexMessage = 0;
@@ -169,7 +169,7 @@ export default class extends Controller {
             return postIt;
         }
 
-        function handleMessage(message, animate = true, animationDuration = 1000) {
+        async function handleMessage(message, animate = true, animationDuration = 1000) {
             console.log('createPostIt', message);
             // const postIt = document.createElement('div')
             // const title = document.createElement('h2');
@@ -205,7 +205,7 @@ export default class extends Controller {
                 incrementCurrentPostIt();
                 postItImage = addStyleToPostIt(postItImage);
                 incrementCurrentPostIt();
-                displayDoublePostIt(postItText, postItImage, animate, animationDuration);
+                await displayDoublePostIt(postItText, postItImage, animate, animationDuration);
                 return;
             }
 
@@ -219,56 +219,59 @@ export default class extends Controller {
             console.log('createdPostIt', postIt);
             blackboard.appendChild(postIt);
 
-            const rect = postIt.getBoundingClientRect();
-            if (rect.height < rect.width) {
-                postIt.style.height = rect.width + 'px';
-            }
-
-            console.log('rect', rect);
-            let absCenter = rect.x + rect.width/2;
-            let ordCenter = rect.y + rect.height/2;
 
             // Animer le div pour qu'il apparaisse au centre puis se place dans la grille
             if (animate) {
-                postIt.animate([
-                    {opacity: 0, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(0) `, offset: 0},
-                    {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.2},
-                    {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.8},
-                    {opacity: 1, transform: `translate(0, 0) scale(1) rotate(${getRandomInt(-10, 10)}deg`}
-                ], {
-                    // Durée de l'animation : 3 secondes
-                    duration: animationDuration,
-                    // Mode de remplissage : conserver le style final
-                    fill: "forwards"
-                });
+                // const rect = postIt.getBoundingClientRect();
+                // if (rect.height < rect.width) {
+                //     postIt.style.height = rect.width + 'px';
+                // }
+                //
+                // console.log('rect', rect);
+                // let absCenter = rect.x + rect.width/2;
+                // let ordCenter = rect.y + rect.height/2;
+                // postIt.animate([
+                //     {opacity: 0, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(0) `, offset: 0},
+                //     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.2},
+                //     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.8},
+                //     {opacity: 1, transform: `translate(0, 0) scale(1) rotate(${getRandomInt(-10, 10)}deg`}
+                // ], {
+                //     // Durée de l'animation : 3 secondes
+                //     duration: animationDuration,
+                //     // Mode de remplissage : conserver le style final
+                //     fill: "forwards"
+                // });
             }
         }
 
-        function displayDoublePostIt(postItText, postItImage, animate, animationDuration) {
+        async function displayDoublePostIt(postItText, postItImage, animate, animationDuration) {
             console.log('createdPostIt', postItText);
             console.log('createdPostIt', postItImage);
             blackboard.appendChild(postItText);
             blackboard.appendChild(postItImage);
 
-            const rectText = postItText.getBoundingClientRect();
-            if (rectText.height < rectText.width) {
-                postItText.style.minHeight = rectText.width + 'px';
-            }
+            await sleep(1000);
 
-            const rectImage = postItImage.getBoundingClientRect();
-            if (rectImage.height < rectImage.width) {
-                postItImage.style.minHeight = rectImage.width + 'px';
-            }
 
-            console.log('rect', rectText);
-            let absCenterText = rectText.x + rectText.width/2;
-            let ordCenterText = rectText.y + rectText.height/2;
-
-            let absCenterImage = rectImage.x + rectImage.width/2;
-            let ordCenterImage = rectImage.y + rectImage.height/2;
 
             // Animer le div pour qu'il apparaisse au centre puis se place dans la grille
             if (animate) {
+
+
+                const rectText = postItText.getBoundingClientRect();
+                const rectImage = postItImage.getBoundingClientRect();
+
+                postItText.style.minHeight = rectText.width + 'px';
+                postItImage.style.minHeight = rectImage.width + 'px';
+
+
+                console.log('rect', rectText);
+                let absCenterText = rectText.x + rectText.width/2;
+                let ordCenterText = rectText.y + rectText.height/2;
+
+                let absCenterImage = rectImage.x + rectImage.width/2;
+                let ordCenterImage = rectImage.y + rectImage.height/2;
+
                 postItText.animate([
                     {opacity: 0, transform: `translate(${window.innerWidth/2 - absCenterText - rectText.width - 20}px, ${window.innerHeight/2 - ordCenterText}px) scale(0) `, offset: 0},
                     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenterText - rectText.width - 20}px, ${window.innerHeight/2 - ordCenterText}px) scale(2) `, offset: 0.2},
