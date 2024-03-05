@@ -88,7 +88,7 @@ export default class extends Controller {
                     await changeMessageStatus(messageToDisplay.id, 'read');
                 } else {
                     console.log('aucun nouveau message à traiter', 'index', indexMessage, 'allMessages', allMessages.length);
-                    handleMessage(allMessages[indexMessage]);
+                    handleMessage(allMessages[indexMessage], true, 2000);
                     indexMessage++;
                     if(indexMessage === allMessages.length) {
                         indexMessage = 0;
@@ -252,12 +252,12 @@ export default class extends Controller {
 
             const rectText = postItText.getBoundingClientRect();
             if (rectText.height < rectText.width) {
-                postItText.style.height = rectText.width + 'px';
+                postItText.style.minHeight = rectText.width + 'px';
             }
 
             const rectImage = postItImage.getBoundingClientRect();
             if (rectImage.height < rectImage.width) {
-                postItImage.style.height = rectImage.width + 'px';
+                postItImage.style.minHeight = rectImage.width + 'px';
             }
 
             console.log('rect', rectText);
