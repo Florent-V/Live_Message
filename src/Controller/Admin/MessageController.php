@@ -80,7 +80,7 @@ class MessageController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_message_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('admin_app_message_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}/read', name: 'read', methods: ['GET'])]

@@ -88,6 +88,10 @@ export default class extends Controller {
                     await changeMessageStatus(messageToDisplay.id, 'read');
                 } else {
                     console.log('aucun nouveau message à traiter', 'index', indexMessage, 'allMessages', allMessages.length);
+                    if (!allMessages.length) {
+                        console.log('no messages')
+                        continue
+                    }
                     await handleMessage(allMessages[indexMessage], true, 2000);
                     indexMessage++;
                     if(indexMessage === allMessages.length) {
@@ -171,31 +175,6 @@ export default class extends Controller {
 
         async function handleMessage(message, animate = true, animationDuration = 1000) {
             console.log('createPostIt', message);
-            // const postIt = document.createElement('div')
-            // const title = document.createElement('h2');
-            // const content = document.createElement('p');
-            // const image = document.createElement('img');
-            //
-            // title.textContent = message.author;
-            // content.textContent = message.content;
-            // image.src = `/media/cache/my_thumb/uploads/images/post_it/${message.image}`;
-            //
-            // postIt.appendChild(title);
-            // postIt.appendChild(content);
-            // postIt.appendChild(image);
-            //
-            // postIt.classList.add('post-it');
-            // postIt.classList.add('pos' + currentPostIt);
-            // postIt.style.backgroundColor = pastelColors[getRandomInt(0, pastelColors.length - 1)];
-            //
-            //
-            // const nbEltByClass = document.getElementsByClassName('pos' + currentPostIt).length;
-            //
-            // if (nbEltByClass > 5) {
-            //     //supprimer le premier élément de la classe
-            //     const firstElt = document.getElementsByClassName('pos' + currentPostIt)[0];
-            //     firstElt.remove();
-            // }
 
             let postItText = createPostItText(message);
             let postItImage = createPostItImage(message);
@@ -212,35 +191,35 @@ export default class extends Controller {
             let postIt = postItText || postItImage;
             postIt = addStyleToPostIt(postIt);
             incrementCurrentPostIt();
-            displayOnePostIt(postIt, animate, animationDuration);
+            await displayOnePostIt(postIt, animate, animationDuration);
         }
 
-        function displayOnePostIt(postIt, animate, animationDuration) {
+        async function displayOnePostIt(postIt, animate, animationDuration) {
             console.log('createdPostIt', postIt);
             blackboard.appendChild(postIt);
 
 
             // Animer le div pour qu'il apparaisse au centre puis se place dans la grille
             if (animate) {
-                // const rect = postIt.getBoundingClientRect();
-                // if (rect.height < rect.width) {
-                //     postIt.style.height = rect.width + 'px';
-                // }
-                //
-                // console.log('rect', rect);
-                // let absCenter = rect.x + rect.width/2;
-                // let ordCenter = rect.y + rect.height/2;
-                // postIt.animate([
-                //     {opacity: 0, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(0) `, offset: 0},
-                //     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.2},
-                //     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.8},
-                //     {opacity: 1, transform: `translate(0, 0) scale(1) rotate(${getRandomInt(-10, 10)}deg`}
-                // ], {
-                //     // Durée de l'animation : 3 secondes
-                //     duration: animationDuration,
-                //     // Mode de remplissage : conserver le style final
-                //     fill: "forwards"
-                // });
+                const rect = postIt.getBoundingClientRect();
+
+                postIt.style.minHeight = rect.width + 'px';
+
+
+                console.log('rect', rect);
+                let absCenter = rect.x + rect.width/2;
+                let ordCenter = rect.y + rect.height/2;
+                postIt.animate([
+                    {opacity: 0, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(0) `, offset: 0},
+                    {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.2},
+                    {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.8},
+                    {opacity: 1, transform: `translate(0, 0) scale(1) rotate(${getRandomInt(-10, 10)}deg`}
+                ], {
+                    // Durée de l'animation : 3 secondes
+                    duration: animationDuration,
+                    // Mode de remplissage : conserver le style final
+                    fill: "forwards"
+                });
             }
         }
 
@@ -250,9 +229,7 @@ export default class extends Controller {
             blackboard.appendChild(postItText);
             blackboard.appendChild(postItImage);
 
-            await sleep(1000);
-
-
+            //await sleep(1000);
 
             // Animer le div pour qu'il apparaisse au centre puis se place dans la grille
             if (animate) {

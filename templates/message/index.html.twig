@@ -29,6 +29,7 @@
                 <td>
                     <a href="{{ path('admin_app_message_show', {'id': message.id}) }}">show</a>
                     <a href="{{ path('admin_app_message_edit', {'id': message.id}) }}">edit</a>
+                    {{ include('message/_delete_form.html.twig') }}
                 </td>
             </tr>
         {% else %}

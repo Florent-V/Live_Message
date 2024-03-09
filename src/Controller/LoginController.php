@@ -24,6 +24,15 @@ class LoginController extends AbstractController
         ]);
     }
 
+    #[Route('/redirectAfterLogin', name: 'redirect_login', methods: ['GET'])]
+    public function redirectAfterLogin(): Response
+    {
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('admin_app_message_run');
+        }
+
+    }
+
     /**
      * @throws Exception
      */
