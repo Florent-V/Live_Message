@@ -11,6 +11,7 @@
                 <th>Id</th>
                 <th>Author</th>
                 <th>Content</th>
+                <th>Picture</th>
                 <th>CreatedAt</th>
                 <th>ReadAt</th>
                 <th>IsRead</th>
@@ -23,6 +24,13 @@
                 <td>{{ message.id }}</td>
                 <td>{{ message.author }}</td>
                 <td>{{ message.content }}</td>
+                <td>
+                    {% if message.image %}
+                        <img style="max-height: 100px" src="{{ vich_uploader_asset(message, 'imageFile')|imagine_filter('my_thumb') }}" alt="{{ message.author }}">
+                    {% else %}
+                        None
+                    {% endif %}
+                </td>
                 <td>{{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ message.ReadAt ? message.ReadAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ message.isRead ? 'Yes' : 'No' }}</td>
