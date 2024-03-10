@@ -36,6 +36,7 @@ class Message
     private ?bool $isRead = false;
 
     #[ORM\Column(length: 30)]
+    #[Assert\Length(min: 2, max: 30)]
     private ?string $author = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
