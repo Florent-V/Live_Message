@@ -6,6 +6,7 @@ use App\Entity\Message;
 use App\Form\MessageType;
 use App\Repository\MessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,9 +47,16 @@ class MessageController extends AbstractController
 
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/{id}', name: 'show', methods: ['GET'])]
-    public function show(Message $message): Response
+    public function show(Message $message, MessageRepository $messageRepository): Response
     {
+        if ($message->isRead() === false) {
+            $messageRepository->markReadAt($message);
+        }
+
         return $this->render('message/show.html.twig', [
             'message' => $message,
         ]);
@@ -83,15 +91,16 @@ class MessageController extends AbstractController
         return $this->redirectToRoute('admin_app_message_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/{id}/read', name: 'read', methods: ['GET'])]
     public function read(
         Message $message,
-        EntityManagerInterface $entityManager
-    ): Response
+        MessageRepository $messageRepository): Response
     {
         if ($message->isRead() === false) {
-            $message->setIsRead(true);
-            $entityManager->flush();
+            $messageRepository->markReadAt($message);
         }
         return $this->json([
             'read' => $message->isRead(),

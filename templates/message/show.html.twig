@@ -4,7 +4,6 @@
 
 {% block body %}
     <h1>Message</h1>
-    {{ dump(message) }}
 
     <table class="table">
         <tbody>
@@ -18,11 +17,11 @@
             </tr>
             <tr>
                 <th>CreatedAt</th>
-                <td>{{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s', 'Europe/Paris') : '' }}</td>
             </tr>
             <tr>
                 <th>ReadAt</th>
-                <td>{{ message.ReadAt ? message.ReadAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ message.ReadAt ? message.ReadAt|date('Y-m-d H:i:s', 'Europe/Paris') : '' }}</td>
             </tr>
             <tr>
                 <th>IsRead</th>
@@ -30,7 +29,13 @@
             </tr>
             <tr>
                 <th>Picture</th>
-                <td><img src="{{ vich_uploader_asset(message, 'imageFile')|imagine_filter('my_thumb') }}" alt="{{ message.author }}"></td>
+                <td>
+                    {% if message.image %}
+                        <img style="max-height: 100px" src="{{ vich_uploader_asset(message, 'imageFile')|imagine_filter('my_thumb') }}" alt="{{ message.author }}">
+                    {% else %}
+                        None
+                    {% endif %}
+                </td>
             </tr>
         </tbody>
     </table>

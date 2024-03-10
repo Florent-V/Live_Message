@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Message;
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @extends ServiceEntityRepository<Message>
@@ -37,6 +40,29 @@ class MessageRepository extends ServiceEntityRepository
 
         return $qb->getQuery()
             ->getResult();
+    }
+
+    public function updateReadAt(int $id): void
+    {
+        $this->createQueryBuilder('m')
+            ->update()
+            ->set('m.isRead', 'true')
+            ->set('m.ReadAt', 'CURRENT_TIMESTAMP()')
+            ->where('m.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function markReadAt(Message $message): void
+    {
+        $message->setIsRead(true);
+        $message->setReadAt(new DateTimeImmutable());
+        $this->getEntityManager()->persist($message);
+        $this->getEntityManager()->flush();
     }
 
 //    /**
