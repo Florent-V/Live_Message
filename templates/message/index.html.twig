@@ -31,8 +31,8 @@
                         None
                     {% endif %}
                 </td>
-                <td>{{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ message.ReadAt ? message.ReadAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s', 'Europe/Paris') : '' }}</td>
+                <td>{{ message.ReadAt ? message.ReadAt|date('Y-m-d H:i:s', 'Europe/Paris') : '' }}</td>
                 <td>{{ message.isRead ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('admin_app_message_show', {'id': message.id}) }}">show</a>
