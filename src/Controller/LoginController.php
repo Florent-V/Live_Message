@@ -30,7 +30,7 @@ class LoginController extends AbstractController
         if ($this->isGranted('ROLE_ADMIN')) {
             return $this->redirectToRoute('admin_app_message_run');
         }
-
+        return $this->redirectToRoute('app_message_new');
     }
 
     /**
