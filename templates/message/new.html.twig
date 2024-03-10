@@ -5,6 +5,7 @@
 {% block body %}
 
     <main {{ stimulus_controller('count-character') }} class="container-md messageNew">
+        <div {{ stimulus_controller('loader-submit-btn') }}></div>
 
         <div class="globalForm">
             <h1>Envoie ton message</h1>
