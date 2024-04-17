@@ -194,7 +194,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 ## Contact
 
 * [![X][X.com]][X-url]
-* [![LinkedIn][linkedin-shield]][linkedin-shield]
+* [![LinkedIn][linkedin-shield]][linkedin-url]
 
 <p style="text-align:right">(<a href="#readme-top">back to top</a>)</p>
 
