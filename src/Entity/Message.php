@@ -23,6 +23,7 @@ class Message
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
     #[Assert\Length(min: 5, max: 400)]
     private ?string $content = null;
 
