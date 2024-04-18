@@ -39,8 +39,6 @@ class MessageController extends AbstractController
         string $read = null
     ): Response
     {
-        $messages = $messageRepository->findMessageAfterId($index, $read);
-
         return $this->json([
             'messages' => $messageRepository->findMessageAfterId($index, $read),
         ]);

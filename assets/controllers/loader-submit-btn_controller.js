@@ -14,10 +14,8 @@ export default class extends Controller {
         const submitBtn = document.getElementById('submit-btn');
 
         const form = document.getElementsByTagName('form')[0];
-        console.log(form);
 
         form.addEventListener('submit', (e) => {
-            console.log('lksdfn')
             submitBtn.innerHTML =
                 `<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                        width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">

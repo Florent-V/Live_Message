@@ -19,13 +19,30 @@ export default class extends Controller {
         let allMessages;
         let maxId = 0;
         let maxPostIt = 10;
+        // Nombre max de post-it affichés en même temps
         let currentPostIt = 3;
+        let fastAnimationDuration = 200;
+        let slowAnimationDuration = 5000;
+        let apiCallInterval = 2000;
         let pastelColors = [
-            '#FFD1DC', '#FFA07A', '#FFDEAD', '#FFD700', '#FF69B4', '#FF6347', '#FF4500', '#FF1493', '#FF00FF',
-            '#FF00FF', '#FF1493', '#FF4500', '#FF6347', '#FF69B4', '#FFD700', '#FFDEAD', '#FFA07A', '#FFD1DC',
-            '#ffffcc', '#ffcc99', '#ffcccc', '#ff99cc', '#ffccff', '#cc99ff', '#ccccff', '#99ccff', '#ccffff', '#99ffcc',
-            '#ccffcc', '#ccff99'
+            '#FFD1DC', '#FFA07A', '#FFDEAD', '#FFD700',
+            '#FF69B4', '#FF6347', '#FF4500', '#FF1493',
+            '#FF00FF','#FF4500', '#FF6347', '#FF69B4',
+            '#FFD700', '#FFDEAD', '#FFA07A', '#FFD1DC',
+            '#ffffcc', '#ffcc99', '#ffcccc', '#ff99cc',
+            '#ffccff', '#cc99ff', '#ccccff', '#99ccff',
+            '#ccffff', '#99ffcc', '#ccffcc', '#ccff99',
+            '#FFACC2', '#FAD0DA', '#9EDFEA', '#90E3DE',
+            '#CDF0F2', '#FF9D93', '#FFB5A6', '#CBDFF3',
+            '#FFE9E9', '#C1DCD9', '#BDECE9', '#ACC7E9',
+            '#86ADDC', '#FEDBCF', '#FFC6BF', '#CBEFE0',
+            '#A2D2FF', '#FFD3B6', '#FFAAA5', '#FF8F85',
+            '#B0E4C8', '#A6DBC7', '#8AC3A6', '#96DBF2',
+            '#BDE8F8', '#FFBD81', '#FFC59D', '#FFCBB3',
+            '#ccffcc', '#ccff99', '#ccffcc', '#ccff99',
+            '#F0BDFE', '#EFBCB3', '#DCEBF2', '#D0E0E3',
         ];
+
         // Fonction pour générer un entier aléatoire entre min et max inclus
         function getRandomInt(min, max) {
             min = Math.ceil(min);
@@ -61,38 +78,38 @@ export default class extends Controller {
         });
 
         async function start() {
-            console.log('init getting messages read');
+            // console.log('init getting messages read');
             if (!allMessages) {
-                console.log('init allMessages read', allMessages);
+                // console.log('init allMessages read', allMessages);
                 allMessages = await getMessages(maxId, 'read');
-                console.log('allMessages read gotten', allMessages);
+                // console.log('allMessages read gotten', allMessages);
             }
 
             for (const message of allMessages) {
-                await handleMessage(message, true, 100);
-                await sleep(100);
+                await handleMessage(message, true, fastAnimationDuration);
+                await sleep(fastAnimationDuration);
             }
-            console.log('initialisation read messages', allMessages.length);
+            // console.log('initialisation read messages', allMessages.length);
             await Promise.all([runDisplayLoop(), runApiCallLoop()]);
         }
 
         async function runDisplayLoop() {
             let indexMessage = 0;
             while(flag) {
-                await sleep(3000);
+                await sleep(slowAnimationDuration + 1000);
                 if (messagesBus.length > 0) {
-                    console.log('messagesBus à traiter', messagesBus.length);
+                    // console.log('messagesBus à traiter', messagesBus.length);
                     const messageToDisplay = messagesBus.shift();
-                    await handleMessage(messageToDisplay, true, 2000);
+                    await handleMessage(messageToDisplay, true, slowAnimationDuration);
                     allMessages.push(messageToDisplay);
                     await changeMessageStatus(messageToDisplay.id, 'read');
                 } else {
-                    console.log('aucun nouveau message à traiter', 'index', indexMessage, 'allMessages', allMessages.length);
+                    // console.log('aucun nouveau message à traiter', 'index', indexMessage, 'allMessages', allMessages.length);
                     if (!allMessages.length) {
-                        console.log('no messages')
+                        // console.log('no messages')
                         continue
                     }
-                    await handleMessage(allMessages[indexMessage], true, 2000);
+                    await handleMessage(allMessages[indexMessage], true, slowAnimationDuration);
                     indexMessage++;
                     if(indexMessage === allMessages.length) {
                         indexMessage = 0;
@@ -103,17 +120,17 @@ export default class extends Controller {
 
         async function runApiCallLoop() {
 
-            console.log('taille messageBus', messagesBus.length);
-            console.log('check maxId', maxId);
+            // console.log('taille messageBus', messagesBus.length);
+            // console.log('check maxId', maxId);
 
             while(flag) {
                 const newMessages = await getMessages(maxId, 'unread');
-                console.log('new unread messages', newMessages.length);
+                // console.log('new unread messages', newMessages.length);
                 maxId = newMessages.length ? newMessages.reduce((maxId, message) => Math.max(maxId, message.id), -1) : maxId;
-                console.log('new maxId', maxId);
+                // console.log('new maxId', maxId);
                 mergeMessages(messagesBus, newMessages);
-                console.log('merge done messageBus', messagesBus.length);
-                await sleep(2000);
+                // console.log('merge done messageBus', messagesBus.length);
+                await sleep(apiCallInterval);
             }
         }
 
@@ -174,7 +191,7 @@ export default class extends Controller {
         }
 
         async function handleMessage(message, animate = true, animationDuration = 1000) {
-            console.log('createPostIt', message);
+            // console.log('createPostIt', message);
 
             let postItText = createPostItText(message);
             let postItImage = createPostItImage(message);
@@ -195,7 +212,7 @@ export default class extends Controller {
         }
 
         async function displayOnePostIt(postIt, animate, animationDuration) {
-            console.log('createdPostIt', postIt);
+            // console.log('createdPostIt', postIt);
             blackboard.appendChild(postIt);
 
 
@@ -205,8 +222,6 @@ export default class extends Controller {
 
                 postIt.style.minHeight = rect.width + 'px';
 
-
-                console.log('rect', rect);
                 let absCenter = rect.x + rect.width/2;
                 let ordCenter = rect.y + rect.height/2;
                 postIt.animate([
@@ -214,6 +229,7 @@ export default class extends Controller {
                     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.2},
                     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenter}px, ${window.innerHeight/2 - ordCenter}px) scale(2) `, offset: 0.8},
                     {opacity: 1, transform: `translate(0, 0) scale(1) rotate(${getRandomInt(-10, 10)}deg`}
+                    //{opacity: 1, transform: `translate(0, 0) scale(1)`}
                 ], {
                     // Durée de l'animation : 3 secondes
                     duration: animationDuration,
@@ -224,25 +240,23 @@ export default class extends Controller {
         }
 
         async function displayDoublePostIt(postItText, postItImage, animate, animationDuration) {
-            console.log('createdPostIt', postItText);
-            console.log('createdPostIt', postItImage);
+            // console.log('createdPostIt', postItText);
+            // console.log('createdPostIt', postItImage);
             blackboard.appendChild(postItText);
             blackboard.appendChild(postItImage);
 
             //await sleep(1000);
-
             // Animer le div pour qu'il apparaisse au centre puis se place dans la grille
             if (animate) {
-
 
                 const rectText = postItText.getBoundingClientRect();
                 const rectImage = postItImage.getBoundingClientRect();
 
                 postItText.style.minHeight = rectText.width + 'px';
                 postItImage.style.minHeight = rectImage.width + 'px';
+                const imgOnly = postItImage.querySelector('img');
+                imgOnly.style.maxHeight = 0.8 * rectImage.height + 'px';
 
-
-                console.log('rect', rectText);
                 let absCenterText = rectText.x + rectText.width/2;
                 let ordCenterText = rectText.y + rectText.height/2;
 
@@ -254,6 +268,7 @@ export default class extends Controller {
                     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenterText - rectText.width - 20}px, ${window.innerHeight/2 - ordCenterText}px) scale(2) `, offset: 0.2},
                     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenterText - rectText.width - 20}px, ${window.innerHeight/2 - ordCenterText}px) scale(2) `, offset: 0.8},
                     {opacity: 1, transform: `translate(0, 0) scale(1) rotate(${getRandomInt(-10, 10)}deg`}
+                    //{opacity: 1, transform: `translate(0, 0) scale(1)`}
                 ], {
                     // Durée de l'animation : 3 secondes
                     duration: animationDuration,
@@ -265,6 +280,7 @@ export default class extends Controller {
                     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenterImage + rectImage.width + 20}px, ${window.innerHeight/2 - ordCenterImage}px) scale(2) `, offset: 0.2},
                     {opacity: 1, transform: `translate(${window.innerWidth/2 - absCenterImage + rectImage.width + 20}px, ${window.innerHeight/2 - ordCenterImage}px) scale(2) `, offset: 0.8},
                     {opacity: 1, transform: `translate(0, 0) scale(1) rotate(${getRandomInt(-10, 10)}deg`}
+                    //{opacity: 1, transform: `translate(0, 0) scale(1)`}
                 ], {
                     // Durée de l'animation : 3 secondes
                     duration: animationDuration,
@@ -278,10 +294,10 @@ export default class extends Controller {
             const apiUrl = `/admin/message/get/${index}/${status}`;
             try {
                 const response = await axios.get(apiUrl);
-                console.log('messages', response.data.messages);
+                // console.log('messages', response.data.messages);
                 return response.data.messages;
             } catch (error) {
-                console.error('Erreur de l\'appel API :', error);
+                // console.error('Erreur de l\'appel API :', error);
                 return [];
             }
         }
@@ -290,10 +306,10 @@ export default class extends Controller {
             const apiUrl = `/admin/message/${id}/${status}`;
             try {
                 const response = await axios.get(apiUrl);
-                console.log('messages', response.data);
+                // console.log('messages', response.data);
                 return response.data;
             } catch (error) {
-                console.error('Erreur de l\'appel API :', error);
+                // console.error('Erreur de l\'appel API :', error);
                 return [];
             }
         }
@@ -309,25 +325,6 @@ export default class extends Controller {
             messagesBus.push(...nouveauxMessages);
         }
 
-        //this.element.textContent = 'Hello Stimulus! Edit me in assets/controllers/hello_controller.js';
-
-        // function displayMessages(messages) {
-        //     // Créez un élément de liste
-        //     const messageArea = document.getElementById('message-area')
-        //     const ul = document.createElement('ul');
-        //     // Parcourez les messages
-        //     messages.forEach(message => {
-        //         // Créez un élément de liste
-        //         console.log(message.content);
-        //         const li = document.createElement('li');
-        //         li.textContent = message.content;
-        //         // Ajoutez le message à la liste
-        //         ul.appendChild(li);
-        //     });
-        //     console.log(ul);
-        //     // Ajoutez la liste à la page
-        //     messageArea.appendChild(ul);
-        // }
         function createPostItTest(animate = true) {
             const postIt = document.createElement('div')
             const h2 = document.createElement('h2');
