@@ -1,0 +1,109 @@
+{% extends 'baseNoNavBar.html.twig' %}
+
+{% block title %}New Message{% endblock %}
+
+{% block body %}
+
+    <main class="viewMessages">
+
+        <h1>Joyeuse Retraite Brigitte !</h1>
+
+        <div class="container-lg containerView">
+            {% for message in messages %}
+                <div class="message">
+
+                    <h2>{{ message.author }}</h2>
+                    <div class="messageContent">
+
+                        {% if message.image %}
+                            <div class="imgContent">
+                                <img class="image-rotation" src="{{ vich_uploader_asset(message, 'imageFile')|imagine_filter('my_thumb') }}" alt="{{ message.author }}">
+                            </div>
+                        {% endif %}
+                        <p class="txtContent">
+                            {{ message.content }}
+                        </p>
+
+                    </div>
+
+                    <div class="rotateIcon">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                        <i class="bi bi-arrow-repeat"></i>
+                        <i class="bi bi-arrow-clockwise"></i>
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    </main>
+
+    <script>
+
+        // const imgs = document.querySelectorAll('img');
+        // imgs.forEach(img => {
+        //     // Ajoutez un écouteur d'événement pour le clic
+        //     let rotation = 0;
+        //     img.addEventListener('click', () => {
+        //         console.log(img.getBoundingClientRect())
+        //         //img.classList.toggle('rotate-90'); /* Ajoute ou enlève la classe de rotation */
+        //         // Augmentez la rotation de 90 degrés
+        //         rotation += 90;
+        //         img.style.transform = `rotate(${rotation}deg)`;
+        //         const parent = img.parentElement;
+        //         parent.style.flexBasis = img.getBoundingClientRect().height + 20 + 'px';
+        //     });
+        // });
+
+        const divMessages = document.querySelectorAll('.message');
+        divMessages.forEach(divMessage => {
+            let rotation = 0;
+            // Ajoutez un écouteur d'événement pour le clic
+
+            const rotateRight = divMessage.querySelector('.bi-arrow-clockwise');
+            const rotateLeft = divMessage.querySelector('.bi-arrow-counterclockwise');
+            const rotate180 = divMessage.querySelector('.bi-arrow-repeat');
+
+            const imgContent = divMessage.querySelector('.imgContent');
+            const img = imgContent.querySelector('img');
+
+            rotateRight.addEventListener('click', () => {
+                //img.classList.toggle('rotate-90'); /* Ajoute ou enlève la classe de rotation */
+                // Augmentez la rotation de 90 degrés
+                rotation += 90;
+                img.style.transform = `rotate(${rotation}deg)`;
+                const parent = img.parentElement;
+                parent.style.flexBasis = img.getBoundingClientRect().height + 20 + 'px';
+            });
+
+            rotateLeft.addEventListener('click', () => {
+                //img.classList.toggle('rotate-90'); /* Ajoute ou enlève la classe de rotation */
+                // Augmentez la rotation de 90 degrés
+                rotation -= 90;
+                img.style.transform = `rotate(${rotation}deg)`;
+                const parent = img.parentElement;
+                parent.style.flexBasis = img.getBoundingClientRect().height + 20 + 'px';
+            });
+
+            rotate180.addEventListener('click', () => {
+                //img.classList.toggle('rotate-90'); /* Ajoute ou enlève la classe de rotation */
+                // Augmentez la rotation de 90 degrés
+                rotation += 180;
+                img.style.transform = `rotate(${rotation}deg)`;
+            });
+
+            // // Récupérez les nouvelles dimensions de l'image après la rotation
+            // const newWidth = rotation % 180 === 0 ? image.naturalWidth : image.naturalHeight;
+            // const newHeight = rotation % 180 === 0 ? image.naturalHeight : image.naturalWidth;
+            //
+            // const newImgContentElement = document.createElement('div')
+            // // Réinitialisez la taille de la div parente en fonction des nouvelles dimensions de l'image
+            // newImgContentElement.style.width = `${newWidth}px`;
+            // newImgContentElement.style.height = `${newHeight}px`;
+        });
+    </script>
+
+{% endblock %}

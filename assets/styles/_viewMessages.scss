@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css?family=Kalam');
+
+// Liste des couleurs
+$colors: #FFD1DC, #FFA07A, #FFDEAD, #FFD700,
+  #FF69B4, #FF6347, #FF4500, #FF1493,
+  #FF00FF, #FF4500, #FF6347, #FF69B4,
+  #FFD700, #FFDEAD, #FFA07A, #FFD1DC,
+  #ffffcc, #ffcc99, #ffcccc, #ff99cc,
+  #ffccff, #cc99ff, #ccccff, #99ccff,
+  #ccffff, #99ffcc, #ccffcc, #ccff99,
+  #FFACC2, #FAD0DA, #9EDFEA, #90E3DE,
+  #CDF0F2, #FF9D93, #FFB5A6, #CBDFF3,
+  #FFE9E9, #C1DCD9, #BDECE9, #ACC7E9,
+  #86ADDC, #FEDBCF, #FFC6BF, #CBEFE0,
+  #A2D2FF, #FFD3B6, #FFAAA5, #FF8F85,
+  #B0E4C8, #A6DBC7, #8AC3A6, #96DBF2,
+  #BDE8F8, #FFBD81, #FFC59D, #FFCBB3,
+  #ccffcc, #ccff99, #ccffcc, #ccff99,
+  #F0BDFE, #EFBCB3, #DCEBF2, #D0E0E3;
+
+// Fonction pour sélectionner une couleur aléatoire
+@function random-color($colors) {
+  $random-index: random(length($colors));
+  @return nth($colors, $random-index);
+}
+
+// Boucle pour appliquer une couleur aléatoire à chaque div avec la classe "message"
+@for $i from 1 through 100 {
+  .message:nth-child(#{$i}) {
+    background: random-color($colors);
+  }
+}
+.viewMessages {
+  min-height: 100vh;
+  background-image: url("../images/black-board.jpg");
+  background-size: cover;
+
+  h1 {
+    color: #f0f0f0;
+    font-size: 4rem;
+  }
+
+  .containerView {
+    display: flex;
+    flex-direction: column;
+
+    .message {
+      padding:1em;
+      margin: 1rem auto;
+      width: 100%;
+      //background: #f0f0f0;
+      box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+      color:#000;
+      overflow: hidden;
+      -moz-box-shadow:5px 5px 7px rgba(33,33,33,1);
+      -webkit-box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+
+      h2 {
+        margin-top: 0;
+        margin-bottom: 5px;
+        text-align: center;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      .messageContent {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+
+        .imgContent {
+          overflow: hidden; /* Empêche le débordement du contenu */
+          display: flex; /* Utilisez flexbox pour centrer l'image */
+          justify-content: center; /* Centre horizontalement */
+          align-items: center; /* Centre verticalement */
+          transition: all 2s ease; /* Animation fluide de la rotation */
+
+          img {
+            max-height: 400px;
+          }
+          /* Ajoutez cette classe à votre image */
+          .image-rotation {
+            transition: transform 2s ease; /* Animation fluide de la rotation */
+          }
+          /* Ajoutez cette classe via JavaScript lorsque vous voulez faire pivoter l'image */
+          //.rotate-90 {
+          //  transform: rotate(90deg); /* Rotation de 90 degrés */
+          //}
+        }
+
+        p {
+          padding: 2rem;
+          flex-grow: 1;
+          font-size: 1.5rem;
+          font-family:"Reenie Beanie",arial,sans-serif;
+        }
+
+      }
+      .rotateIcon i {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+/* Ajoutez cette classe à votre div conteneur */
+.div-conteneur {
+
+}
+
+/* Ajoutez cette classe à votre image */
+.image-rotation {
+  transition: transform 0.5s ease; /* Animation fluide de la rotation */
+}
+
+/* Ajoutez cette classe via JavaScript lorsque vous voulez faire pivoter l'image */
+.rotate-90 {
+  transform: rotate(90deg); /* Rotation de 90 degrés */
+}
