@@ -68,6 +68,8 @@
             const rotate180 = divMessage.querySelector('.bi-arrow-repeat');
 
             const imgContent = divMessage.querySelector('.imgContent');
+
+            if (!imgContent) return;
             const img = imgContent.querySelector('img');
 
             rotateRight.addEventListener('click', () => {
