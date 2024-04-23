@@ -23,6 +23,14 @@ class MessageController extends AbstractController
         ]);
     }
 
+    #[Route('/view', name: 'view', methods: ['GET'])]
+    public function view(MessageRepository $messageRepository): Response
+    {
+        return $this->render('message/view.html.twig', [
+            'messages' => $messageRepository->findAll(),
+        ]);
+    }
+
     #[Route('/run', name: 'run', methods: ['GET'])]
     public function run(): Response
     {
