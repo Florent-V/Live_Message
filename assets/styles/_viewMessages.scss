@@ -25,7 +25,7 @@ $colors: #FFD1DC, #FFA07A, #FFDEAD, #FFD700,
 }
 
 // Boucle pour appliquer une couleur aléatoire à chaque div avec la classe "message"
-@for $i from 1 through 100 {
+@for $i from 1 through 500 {
   .message:nth-child(#{$i}) {
     background: random-color($colors);
   }
