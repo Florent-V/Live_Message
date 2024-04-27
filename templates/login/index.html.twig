@@ -23,12 +23,12 @@
         <form action="{{ path('app_login') }}" method="post">
 
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}">
+                <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="abc@mail.fr">
                 <label for="username">Email:</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="password" name="_password">
+                <input type="password" class="form-control" id="password" name="_password" placeholder="*****">
                 <label for="password">Password:</label>
             </div>
 
@@ -36,7 +36,7 @@
 {#            <input type="hidden" name="_target_path" value="/">#}
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-            <button class="btn btn-primary" type="submit">Se connecter</button>
+            <button class="connectBtn" type="submit">Se connecter</button>
         </form>
 
         <div class="newUser">
