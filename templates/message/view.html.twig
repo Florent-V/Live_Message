@@ -26,10 +26,15 @@
 
                     </div>
 
-                    <div class="rotateIcon">
+                    <div class="rotateIcon d-flex gap-2">
                         <i class="bi bi-arrow-counterclockwise"></i>
                         <i class="bi bi-arrow-repeat"></i>
                         <i class="bi bi-arrow-clockwise"></i>
+                        {% if message.image %}
+                            <a style="color: black" href="{{ asset('uploads/images/post_it/éa&²' ~ message.image) }}" download>
+                                <i class="bi bi-download"></i>
+                            </a>
+                        {% endif %}
                     </div>
 
                 </div>
@@ -42,21 +47,6 @@
     </main>
 
     <script>
-
-        // const imgs = document.querySelectorAll('img');
-        // imgs.forEach(img => {
-        //     // Ajoutez un écouteur d'événement pour le clic
-        //     let rotation = 0;
-        //     img.addEventListener('click', () => {
-        //         console.log(img.getBoundingClientRect())
-        //         //img.classList.toggle('rotate-90'); /* Ajoute ou enlève la classe de rotation */
-        //         // Augmentez la rotation de 90 degrés
-        //         rotation += 90;
-        //         img.style.transform = `rotate(${rotation}deg)`;
-        //         const parent = img.parentElement;
-        //         parent.style.flexBasis = img.getBoundingClientRect().height + 20 + 'px';
-        //     });
-        // });
 
         const divMessages = document.querySelectorAll('.message');
         divMessages.forEach(divMessage => {
@@ -71,23 +61,43 @@
 
             if (!imgContent) return;
             const img = imgContent.querySelector('img');
+            const landscape = img.width > img.height;
+            const initialHeight = img.height;
+            const initialWidth = img.width;
 
             rotateRight.addEventListener('click', () => {
                 //img.classList.toggle('rotate-90'); /* Ajoute ou enlève la classe de rotation */
                 // Augmentez la rotation de 90 degrés
                 rotation += 90;
-                img.style.transform = `rotate(${rotation}deg)`;
-                const parent = img.parentElement;
-                parent.style.flexBasis = img.getBoundingClientRect().height + 20 + 'px';
+                console.log('width', initialWidth)
+                console.log('height', initialHeight)
+                console.log('landscape', landscape)
+
+                if (landscape) {
+                    const newHeight = rotation % 180 === 0 ? initialHeight : initialWidth;
+                    console.log('newHeight', newHeight)
+                    img.style.height = newHeight + 'px';
+                    img.style.transform = `rotate(${rotation}deg)`;
+                } else {
+                    img.style.transform = `rotate(${rotation}deg)`;
+                    const parent = img.parentElement;
+                    parent.style.flexBasis = img.getBoundingClientRect().height + 20 + 'px';
+                }
             });
 
             rotateLeft.addEventListener('click', () => {
                 //img.classList.toggle('rotate-90'); /* Ajoute ou enlève la classe de rotation */
                 // Augmentez la rotation de 90 degrés
                 rotation -= 90;
-                img.style.transform = `rotate(${rotation}deg)`;
-                const parent = img.parentElement;
-                parent.style.flexBasis = img.getBoundingClientRect().height + 20 + 'px';
+                if (img.width > img.height) {
+                    const newHeight = rotation % 90 === 0 ? img.width : img.height;
+                    img.style.height = newHeight + 'px';
+                    img.style.transform = `rotate(${rotation}deg)`;
+                } else {
+                    img.style.transform = `rotate(${rotation}deg)`;
+                    const parent = img.parentElement;
+                    parent.style.flexBasis = img.getBoundingClientRect().height + 20 + 'px';
+                }
             });
 
             rotate180.addEventListener('click', () => {
@@ -97,14 +107,6 @@
                 img.style.transform = `rotate(${rotation}deg)`;
             });
 
-            // // Récupérez les nouvelles dimensions de l'image après la rotation
-            // const newWidth = rotation % 180 === 0 ? image.naturalWidth : image.naturalHeight;
-            // const newHeight = rotation % 180 === 0 ? image.naturalHeight : image.naturalWidth;
-            //
-            // const newImgContentElement = document.createElement('div')
-            // // Réinitialisez la taille de la div parente en fonction des nouvelles dimensions de l'image
-            // newImgContentElement.style.width = `${newWidth}px`;
-            // newImgContentElement.style.height = `${newHeight}px`;
         });
     </script>
 
